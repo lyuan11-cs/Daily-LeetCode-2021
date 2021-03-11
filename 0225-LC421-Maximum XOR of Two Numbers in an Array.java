@@ -132,9 +132,60 @@ class Solution {
             
         }
         
-        return maxXor;
-        
-        
-        
+        return maxXor;  
     }
 }
+Solution 3: 
+
+class  trie
+{
+    trie children[];
+    trie()
+    {
+        children=new trie[2];
+    }
+}
+
+
+class Solution {
+
+    public int findMaximumXOR(int[] nums) {
+        trie triehead=new trie() ;
+        for (int ele:nums)
+        {
+            trie curr=triehead;
+            for (int i=31;i>=0;i--)
+            {
+                int currbit=((ele>>i)&1);
+                if (curr.children[currbit]==null)
+                {
+                    curr.children[currbit]=new trie();
+                }
+                    curr=curr.children[currbit];
+                
+                
+            }
+        }
+        int max=Integer.MIN_VALUE;
+        for (int ele:nums)
+        {
+            trie currnode=triehead;
+            int currsum=0;
+            for (int i=31;i>=0;i--)
+            {
+                int currbit=((ele>>i)&1);
+                if (currnode.children[currbit^1]!=null)
+                {
+                    currsum+=(1<<i);
+                    currnode=currnode.children[currbit^1];
+
+                }
+                else {
+                    currnode=currnode.children[currbit];
+                }
+            }
+            max=Math.max(max,currsum);
+        }
+        return max;
+    }
+} 
